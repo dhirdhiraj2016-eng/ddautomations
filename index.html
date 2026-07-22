@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDAutomations — Automation Systems for Local &amp; E‑commerce Brands</title>
+<meta name="description" content="DDAutomations builds lead capture, follow-up, and notification systems that turn missed leads into booked calls — automatically.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B0C10'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='700' font-size='52' fill='%235B8DEF' text-anchor='middle'%3EDD%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#07080C',
+          surface: '#0E1016',
+          surface2: '#141722',
+          border: 'rgba(255,255,255,0.08)',
+          muted: '#9096A6',
+          accent: '#5B8DEF',
+          accent2: '#9B6BFF',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        boxShadow: {
+          glow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px -20px rgba(91,141,239,0.35)',
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{ color-scheme: dark; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91,141,239,0.16), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 10%, rgba(155,107,255,0.10), transparent),
+      #07080C;
+  }
+  ::selection{ background: rgba(91,141,239,0.35); color:#fff; }
+
+  ::-webkit-scrollbar{ width: 10px; }
+  ::-webkit-scrollbar-track{ background: #07080C; }
+  ::-webkit-scrollbar-thumb{ background: #23273a; border-radius: 8px; border: 2px solid #07080C; }
+
+  .grad-text{
+    background: linear-gradient(90deg, #EAF0FF 0%, #B9CBFF 45%, #9B6BFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .grad-line{ background: linear-gradient(90deg, #5B8DEF, #9B6BFF); }
+  .grad-border{ position: relative; }
+  .grad-border::before{
+    content:"";
+    position:absolute; inset:0; border-radius:inherit; padding:1px;
+    background: linear-gradient(135deg, rgba(91,141,239,0.55), rgba(155,107,255,0.15), rgba(255,255,255,0.03));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+  }
+  .glass{
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-glass{
+    background: rgba(7,8,12,0.65);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+  }
+
+  .btn-primary{
+    background: linear-gradient(90deg,#5B8DEF,#9B6BFF);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 12px 30px -10px rgba(91,141,239,0.55);
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 18px 40px -12px rgba(91,141,239,0.7); }
+  .btn-primary:active{ transform: translateY(0px) scale(.98); }
+
+  .btn-ghost{ transition: background .25s ease, border-color .25s ease, transform .25s ease; }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+  .card-hover{ transition: transform .4s cubic-bezier(.2,.8,.2,1), border-color .4s ease, box-shadow .4s ease; }
+  .card-hover:hover{ transform: translateY(-6px); border-color: rgba(91,141,239,0.4); box-shadow: 0 30px 60px -30px rgba(91,141,239,0.35); }
+
+  [data-reveal]{ opacity:0; transform: translateY(24px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+  [data-reveal].in{ opacity:1; transform: translateY(0); }
+  [data-reveal="scale"]{ transform: translateY(16px) scale(.97); }
+  [data-reveal="scale"].in{ transform: translateY(0) scale(1); }
+
+  @keyframes floaty{ 0%,100%{ transform: translateY(0px);} 50%{ transform: translateY(-10px);} }
+  .floaty{ animation: floaty 6s ease-in-out infinite; }
+
+  @keyframes travelX{ 0%{ left:-3%; opacity:0; } 8%{ opacity:1; } 92%{ opacity:1; } 100%{ left:101%; opacity:0; } }
+  @keyframes travelY{ 0%{ top:-3%; opacity:0; } 8%{ opacity:1; } 92%{ opacity:1; } 100%{ top:101%; opacity:0; } }
+  .pulse-h{ position:absolute; top:50%; width:8px; height:8px; margin-top:-4px; border-radius:9999px; background:#BFD3FF; box-shadow:0 0 12px 3px rgba(91,141,239,0.9); animation: travelX 2.6s linear infinite; }
+  .pulse-v{ position:absolute; left:50%; width:8px; height:8px; margin-left:-4px; border-radius:9999px; background:#BFD3FF; box-shadow:0 0 12px 3px rgba(91,141,239,0.9); animation: travelY 2.6s linear infinite; }
+
+  .node-active{ border-color: rgba(91,141,239,0.7) !important; box-shadow: 0 0 0 1px rgba(91,141,239,0.4), 0 0 40px -6px rgba(91,141,239,0.6); }
+  .node-active .node-icon{ color:#BFD3FF; }
+  .node-done{ border-color: rgba(74,222,128,0.55) !important; }
+
+  .connector{ position:relative; overflow:hidden; }
+  .connector-fill{ position:absolute; inset:0; background: linear-gradient(90deg,#5B8DEF,#9B6BFF); transform-origin:left; transform: scaleX(0); transition: transform .6s cubic-bezier(.3,.8,.3,1); }
+  .connector-fill.vfill{ transform-origin: top; transform: scaleY(0); }
+  .connector.filled .connector-fill{ transform: scaleX(1); }
+  .connector.filled .connector-fill.vfill{ transform: scaleY(1); }
+
+  input:focus, textarea:focus{ outline: none; }
+  .field{ transition: border-color .2s ease, box-shadow .2s ease, background .2s ease; }
+  .field:focus{ border-color: rgba(91,141,239,0.6); box-shadow: 0 0 0 4px rgba(91,141,239,0.12); background: rgba(255,255,255,0.04); }
+
+  .accordion-panel{ max-height:0; overflow:hidden; transition: max-height .4s cubic-bezier(.2,.7,.2,1); }
+  .accordion-icon{ transition: transform .3s ease; }
+  .accordion-item.open .accordion-icon{ transform: rotate(45deg); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  .num-eyebrow{ letter-spacing: 0.12em; }
+</style>
+</head>
+
+<body class="bg-bg text-white font-body antialiased selection:bg-accent/30">
+
+<!-- ================= NAV ================= -->
+<header id="siteNav" class="fixed top-0 inset-x-0 z-50 border-b border-transparent transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="flex items-center justify-between h-16 md:h-[70px]">
+      <a href="#top" class="flex items-center gap-2.5 group">
+        <span class="w-8 h-8 rounded-lg grad-line flex items-center justify-center font-display font-bold text-[13px] text-white shadow-glow">DD</span>
+        <span class="font-display font-semibold text-[15px] tracking-tight">DDAutomations</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm text-muted font-medium">
+        <a href="#services" class="hover:text-white transition-colors">Services</a>
+        <a href="#demo" class="hover:text-white transition-colors">Live demo</a>
+        <a href="#benefits" class="hover:text-white transition-colors">Benefits</a>
+        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+        <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <a href="#contact" class="btn-ghost text-sm font-medium px-4 py-2 rounded-full border border-white/10 text-white/90">Contact</a>
+        <a href="#contact" class="btn-primary text-sm font-semibold px-4 py-2 rounded-full text-white">Book a discovery call</a>
+      </div>
+
+      <button id="menuBtn" aria-label="Open menu" aria-expanded="false" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg border border-white/10">
+        <svg id="menuIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="md:hidden hidden border-t border-white/10 nav-glass">
+    <div class="px-5 py-5 flex flex-col gap-1 text-[15px]">
+      <a href="#services" class="py-3 border-b border-white/5 text-white/85">Services</a>
+      <a href="#demo" class="py-3 border-b border-white/5 text-white/85">Live demo</a>
+      <a href="#benefits" class="py-3 border-b border-white/5 text-white/85">Benefits</a>
+      <a href="#pricing" class="py-3 border-b border-white/5 text-white/85">Pricing</a>
+      <a href="#faq" class="py-3 border-b border-white/5 text-white/85">FAQ</a>
+      <a href="#contact" class="mt-4 btn-primary text-center rounded-full py-3 font-semibold">Book a discovery call</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="relative pt-36 pb-24 md:pt-44 md:pb-32 px-5 sm:px-8 overflow-hidden">
+  <div class="pointer-events-none absolute inset-0 -z-10" style="background-image:linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); background-size:64px 64px; mask-image: radial-gradient(ellipse 60% 50% at 50% 20%, black, transparent);"></div>
+  <div class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-accent/20 blur-[120px] -z-10"></div>
+
+  <div class="max-w-5xl mx-auto text-center">
+    <div data-reveal class="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-mono text-white/70 mb-7 num-eyebrow">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_2px_rgba(74,222,128,0.7)]"></span>
+      AUTOMATION FOR LOCAL &amp; E‑COMMERCE BRANDS
+    </div>
+
+    <h1 data-reveal class="font-display font-semibold text-[2.5rem] leading-[1.08] sm:text-6xl md:text-[4.4rem] md:leading-[1.05] tracking-tight">
+      Every lead answered.<br class="hidden sm:block"> <span class="grad-text">Every call, booked.</span>
+    </h1>
+
+    <p data-reveal class="mt-7 text-lg md:text-xl text-muted max-w-2xl mx-auto leading-relaxed">
+      DDAutomations builds the behind‑the‑scenes systems that capture your leads, notify your team instantly, and follow up with customers automatically — so nothing sits in an inbox and your calendar fills itself.
+    </p>
+
+    <div data-reveal class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+      <a href="#contact" class="btn-primary w-full sm:w-auto text-center font-semibold px-7 py-3.5 rounded-full text-[15px]">Book a free automation audit</a>
+      <a href="#demo" class="btn-ghost w-full sm:w-auto text-center font-medium px-7 py-3.5 rounded-full text-[15px] border border-white/12 flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-6.518-3.76A1 1 0 007 8.24v7.52a1 1 0 001.234.972l.017-.005a1 1 0 00.001 0l6.5-3.76a1 1 0 000-1.8z"/><circle cx="12" cy="12" r="9" stroke-linecap="round"/></svg>
+        See how it works
+      </a>
+    </div>
+
+    <p data-reveal class="mt-5 text-xs text-white/40 font-mono">No contracts to start · Setup in days, not months</p>
+  </div>
+
+  <div data-reveal="scale" class="relative max-w-5xl mx-auto mt-20 md:mt-24">
+    <div class="glass grad-border rounded-2xl px-6 py-8 md:px-12 md:py-12">
+      <div class="flex flex-col md:flex-row items-stretch justify-between gap-6 md:gap-0">
+
+        <div class="floaty flex-1 flex flex-col items-center text-center gap-3" style="animation-delay:0s">
+          <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M9 8h1M5 20h14a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+          </div>
+          <span class="text-xs font-mono text-white/60">Lead comes in</span>
+        </div>
+
+        <div class="hidden md:flex flex-1 items-center relative px-3">
+          <div class="w-full h-px bg-white/10 relative overflow-visible">
+            <span class="pulse-h" style="animation-delay:0s"></span>
+          </div>
+        </div>
+
+        <div class="floaty flex-1 flex flex-col items-center text-center gap-3" style="animation-delay:.6s">
+          <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-accent2" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <span class="text-xs font-mono text-white/60">System reacts instantly</span>
+        </div>
+
+        <div class="hidden md:flex flex-1 items-center relative px-3">
+          <div class="w-full h-px bg-white/10 relative overflow-visible">
+            <span class="pulse-h" style="animation-delay:1.3s"></span>
+          </div>
+        </div>
+
+        <div class="floaty flex-1 flex flex-col items-center text-center gap-3" style="animation-delay:1.2s">
+          <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <span class="text-xs font-mono text-white/60">Call gets booked</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRUST STRIP ================= -->
+<section class="border-y border-white/6 py-8 overflow-hidden">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <p class="text-center text-xs font-mono text-white/35 mb-6 num-eyebrow">BUILT FOR THE BUSINESSES THAT CAN'T AFFORD A MISSED LEAD</p>
+    <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-white/45 text-sm font-display font-medium">
+      <span>Home Services</span>
+      <span class="text-white/15">·</span>
+      <span>Medspas &amp; Clinics</span>
+      <span class="text-white/15">·</span>
+      <span>Contractors</span>
+      <span class="text-white/15">·</span>
+      <span>Real Estate Teams</span>
+      <span class="text-white/15">·</span>
+      <span>DTC &amp; Shopify Brands</span>
+      <span class="text-white/15">·</span>
+      <span>Salons &amp; Studios</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="services" class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="max-w-2xl mb-14 md:mb-16">
+      <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">WHAT WE BUILD</p>
+      <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1]">Systems that work while you don't.</h2>
+      <p data-reveal class="mt-5 text-muted text-lg leading-relaxed">Each system is built around your business, not a template. Here's what we most often put to work.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg mb-2">Missed‑call text‑back</h3>
+        <p class="text-muted text-[15px] leading-relaxed">Every missed call gets an instant text reply, so a customer who couldn't reach you doesn't just call your competitor next.</p>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg mb-2">Lead capture &amp; routing</h3>
+        <p class="text-muted text-[15px] leading-relaxed">Every form, call, and DM is logged and routed to the right person in seconds — no lead ever waits in an unread inbox.</p>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg mb-2">Appointment reminders</h3>
+        <p class="text-muted text-[15px] leading-relaxed">Automatic text and email reminders before every booking, cutting no‑shows without anyone lifting a finger.</p>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.127 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg mb-2">Review &amp; reputation automation</h3>
+        <p class="text-muted text-[15px] leading-relaxed">Happy customers get a review request at exactly the right moment; unhappy ones get routed to you first, privately.</p>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-9 4a1 1 0 102 0 1 1 0 00-2 0zm9 0a1 1 0 102 0 1 1 0 00-2 0z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg mb-2">E‑commerce recovery flows</h3>
+        <p class="text-muted text-[15px] leading-relaxed">Abandoned‑cart, order‑confirmation, and post‑purchase sequences that bring shoppers back without a manual email ever being sent.</p>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg mb-2">Reporting &amp; dashboards</h3>
+        <p class="text-muted text-[15px] leading-relaxed">A single, live view of every lead, its source, and its status — so you always know what's working without asking anyone.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= LIVE DEMO ================= -->
+<section id="demo" class="py-24 md:py-32 px-5 sm:px-8 bg-surface/40 border-y border-white/6">
+  <div class="max-w-6xl mx-auto">
+    <div class="max-w-2xl mb-14 md:mb-16">
+      <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">LIVE DEMO</p>
+      <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1]">Watch a lead move through the system.</h2>
+      <p data-reveal class="mt-5 text-muted text-lg leading-relaxed">This is a real, simplified version of a system we build for clients. Fill in the form below and submit it — nothing is sent anywhere, but every step you see is exactly what happens behind the scenes for a real customer.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-5 gap-6 items-start">
+
+      <div data-reveal class="lg:col-span-2 glass rounded-2xl p-6 sm:p-7">
+        <h3 class="font-display font-semibold text-lg mb-1">Try the intake form</h3>
+        <p class="text-muted text-sm mb-6">Step 1 of the workflow — this is what your customer fills out.</p>
+
+        <form id="demoForm" class="space-y-4">
+          <div>
+            <label class="text-xs font-mono text-white/50 mb-1.5 block">FULL NAME</label>
+            <input required id="demoName" type="text" placeholder="Alex Rivera" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+          </div>
+          <div>
+            <label class="text-xs font-mono text-white/50 mb-1.5 block">EMAIL</label>
+            <input required id="demoEmail" type="email" placeholder="alex@email.com" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+          </div>
+          <div>
+            <label class="text-xs font-mono text-white/50 mb-1.5 block">WHAT DO YOU NEED?</label>
+            <input required id="demoService" type="text" placeholder="Kitchen remodel quote" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+          </div>
+          <button type="submit" id="demoSubmit" class="btn-primary w-full font-semibold text-sm py-3.5 rounded-lg flex items-center justify-center gap-2">
+            <span id="demoSubmitLabel">Submit request</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="lg:col-span-3 glass grad-border rounded-2xl p-6 sm:p-8">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="font-display font-semibold text-lg">The automation pipeline</h3>
+          <span id="pipelineStatus" class="text-xs font-mono text-white/40">WAITING FOR SUBMISSION</span>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:items-stretch gap-0">
+
+          <div class="flex md:flex-col items-center md:items-center gap-4 md:gap-3 md:flex-1 md:text-center">
+            <div id="node1" class="node w-14 h-14 shrink-0 rounded-2xl border border-white/12 bg-white/[0.03] flex items-center justify-center transition-all duration-500">
+              <svg class="node-icon w-6 h-6 text-white/50 transition-colors" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2a4 4 0 014-4h3m0 0l-3-3m3 3l-3 3M4 7h9a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2z"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Customer submits form</p>
+              <p class="text-xs text-white/40 mt-0.5">Step 01</p>
+            </div>
+          </div>
+
+          <div class="connector hidden md:block flex-none w-10 self-center h-px bg-white/10 md:mt-[-52px]" id="conn12"><div class="connector-fill h-full w-full"></div></div>
+          <div class="connector md:hidden w-px h-8 bg-white/10 ml-7 my-1" id="conn12m"><div class="connector-fill w-full h-full vfill"></div></div>
+
+          <div class="flex md:flex-col items-center md:items-center gap-4 md:gap-3 md:flex-1 md:text-center">
+            <div id="node2" class="node w-14 h-14 shrink-0 rounded-2xl border border-white/12 bg-white/[0.03] flex items-center justify-center transition-all duration-500">
+              <svg class="node-icon w-6 h-6 text-white/50 transition-colors" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2a4 4 0 014-4h3M9 3h6a2 2 0 012 2v14a2 2 0 01-2 2H9a2 2 0 01-2-2V5a2 2 0 012-2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 8h6M9 12h6M9 16h3"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Google Sheets logs the lead</p>
+              <p class="text-xs text-white/40 mt-0.5">Step 02</p>
+            </div>
+          </div>
+
+          <div class="connector hidden md:block flex-none w-10 self-center h-px bg-white/10 md:mt-[-52px]" id="conn23"><div class="connector-fill h-full w-full"></div></div>
+          <div class="connector md:hidden w-px h-8 bg-white/10 ml-7 my-1" id="conn23m"><div class="connector-fill w-full h-full vfill"></div></div>
+
+          <div class="flex md:flex-col items-center md:items-center gap-4 md:gap-3 md:flex-1 md:text-center">
+            <div id="node3" class="node w-14 h-14 shrink-0 rounded-2xl border border-white/12 bg-white/[0.03] flex items-center justify-center transition-all duration-500">
+              <svg class="node-icon w-6 h-6 text-white/50 transition-colors" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Owner gets notified</p>
+              <p class="text-xs text-white/40 mt-0.5">Step 03</p>
+            </div>
+          </div>
+
+          <div class="connector hidden md:block flex-none w-10 self-center h-px bg-white/10 md:mt-[-52px]" id="conn34"><div class="connector-fill h-full w-full"></div></div>
+          <div class="connector md:hidden w-px h-8 bg-white/10 ml-7 my-1" id="conn34m"><div class="connector-fill w-full h-full vfill"></div></div>
+
+          <div class="flex md:flex-col items-center md:items-center gap-4 md:gap-3 md:flex-1 md:text-center">
+            <div id="node4" class="node w-14 h-14 shrink-0 rounded-2xl border border-white/12 bg-white/[0.03] flex items-center justify-center transition-all duration-500">
+              <svg class="node-icon w-6 h-6 text-white/50 transition-colors" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Customer gets confirmation</p>
+              <p class="text-xs text-white/40 mt-0.5">Step 04</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4 mt-10">
+          <div id="sheetPanel" class="opacity-40 transition-opacity duration-500 rounded-xl border border-white/10 bg-black/30 p-4">
+            <p class="text-xs font-mono text-white/40 mb-2">GOOGLE SHEET — leads_master</p>
+            <div class="text-xs font-mono text-white/70 space-y-1 overflow-x-auto">
+              <div class="grid grid-cols-3 gap-2 text-white/35 border-b border-white/10 pb-1.5"><span>NAME</span><span>SERVICE</span><span>STATUS</span></div>
+              <div id="sheetRow" class="grid grid-cols-3 gap-2 pt-1.5 truncate">
+                <span id="sheetName">—</span><span id="sheetService">—</span><span class="text-emerald-400">logged</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="notifyPanel" class="opacity-40 transition-opacity duration-500 rounded-xl border border-white/10 bg-black/30 p-4">
+            <p class="text-xs font-mono text-white/40 mb-2">NOTIFICATION — owner's phone</p>
+            <p class="text-sm text-white/80 leading-snug">📩 New lead: <span id="notifyName">—</span> needs <span id="notifyService">—</span>. Reply within 5 min for best conversion.</p>
+          </div>
+        </div>
+
+        <div id="emailPanel" class="opacity-40 transition-opacity duration-500 rounded-xl border border-white/10 bg-black/30 p-4 mt-4">
+          <p class="text-xs font-mono text-white/40 mb-2">EMAIL — sent to customer</p>
+          <p class="text-sm text-white/80 leading-snug">Hi <span id="emailName">there</span> — thanks for reaching out about <span id="emailService">your project</span>. We've got your request and someone from our team will be in touch shortly.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BENEFITS ================= -->
+<section id="benefits" class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="max-w-2xl mb-14 md:mb-16">
+      <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">WHY IT MATTERS</p>
+      <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1]">The math is simple.</h2>
+      <p data-reveal class="mt-5 text-muted text-lg leading-relaxed">Slow follow‑up is the single most common reason a good lead never becomes a customer. Automation removes the delay entirely.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mb-6">
+      <div data-reveal class="glass rounded-2xl p-8">
+        <p class="font-display text-4xl font-semibold grad-text mb-2">78%</p>
+        <p class="text-sm text-white/60 leading-relaxed">of customers buy from whichever business responds to them first — speed decides the sale more often than price does.</p>
+      </div>
+      <div data-reveal class="glass rounded-2xl p-8">
+        <p class="font-display text-4xl font-semibold grad-text mb-2">&lt;60 sec</p>
+        <p class="text-sm text-white/60 leading-relaxed">average response time once a system replaces the inbox check‑and‑reply routine your team is doing manually today.</p>
+      </div>
+      <div data-reveal class="glass rounded-2xl p-8">
+        <p class="font-display text-4xl font-semibold grad-text mb-2">24/7</p>
+        <p class="text-sm text-white/60 leading-relaxed">coverage, including nights, weekends, and holidays — the hours when your team is off but your leads keep arriving.</p>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div data-reveal class="flex items-start gap-4 p-6 rounded-2xl border border-white/8">
+        <div class="w-9 h-9 rounded-lg bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div>
+          <p class="font-semibold text-sm mb-1">Get back 10+ hours a week</p>
+          <p class="text-white/55 text-sm leading-relaxed">The manual copy‑paste, texting, and reminder‑sending your team does today happens on its own.</p>
+        </div>
+      </div>
+      <div data-reveal class="flex items-start gap-4 p-6 rounded-2xl border border-white/8">
+        <div class="w-9 h-9 rounded-lg bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div>
+          <p class="font-semibold text-sm mb-1">Never lose a lead to silence</p>
+          <p class="text-white/55 text-sm leading-relaxed">Every inquiry gets an instant, consistent response — no lead falls through a crack in someone's schedule.</p>
+        </div>
+      </div>
+      <div data-reveal class="flex items-start gap-4 p-6 rounded-2xl border border-white/8">
+        <div class="w-9 h-9 rounded-lg bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div>
+          <p class="font-semibold text-sm mb-1">Look more professional, instantly</p>
+          <p class="text-white/55 text-sm leading-relaxed">Fast, polished replies make a small team feel like a business with real infrastructure behind it.</p>
+        </div>
+      </div>
+      <div data-reveal class="flex items-start gap-4 p-6 rounded-2xl border border-white/8">
+        <div class="w-9 h-9 rounded-lg bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div>
+          <p class="font-semibold text-sm mb-1">Scale without hiring</p>
+          <p class="text-white/55 text-sm leading-relaxed">Handle twice the leads without adding headcount to your front desk or sales team.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section id="pricing" class="py-24 md:py-32 px-5 sm:px-8 bg-surface/40 border-y border-white/6">
+  <div class="max-w-6xl mx-auto">
+    <div class="max-w-2xl mb-14 md:mb-16 mx-auto text-center">
+      <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">PRICING</p>
+      <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1]">Straightforward plans, built to fit.</h2>
+      <p data-reveal class="mt-5 text-muted text-lg leading-relaxed">Every engagement starts with a discovery call so pricing reflects your actual workflow — these are the ranges most clients land in.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6 items-start">
+
+      <div data-reveal class="glass rounded-2xl p-8 flex flex-col">
+        <h3 class="font-display font-semibold text-xl mb-1">Starter</h3>
+        <p class="text-white/50 text-sm mb-6">For solo operators &amp; small local shops</p>
+        <div class="mb-6">
+          <span class="font-display text-4xl font-semibold">$497</span>
+          <span class="text-white/40 text-sm"> setup</span>
+          <p class="text-white/40 text-sm mt-1">+ $97/mo maintenance</p>
+        </div>
+        <ul class="space-y-3 text-sm text-white/70 mb-8 flex-1">
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Missed‑call text‑back</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Lead capture + Sheets logging</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Instant owner notification</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Automatic confirmation email</li>
+        </ul>
+        <a href="#contact" class="btn-ghost text-center font-semibold text-sm py-3 rounded-full border border-white/15">Book a discovery call</a>
+      </div>
+
+      <div data-reveal class="relative glass grad-border rounded-2xl p-8 flex flex-col lg:-translate-y-3">
+        <span class="absolute -top-3 left-1/2 -translate-x-1/2 grad-line text-xs font-semibold px-4 py-1 rounded-full">Most popular</span>
+        <h3 class="font-display font-semibold text-xl mb-1 mt-2">Growth</h3>
+        <p class="text-white/50 text-sm mb-6">For growing local businesses &amp; service teams</p>
+        <div class="mb-6">
+          <span class="font-display text-4xl font-semibold">$1,497</span>
+          <span class="text-white/40 text-sm"> setup</span>
+          <p class="text-white/40 text-sm mt-1">+ $197/mo maintenance</p>
+        </div>
+        <ul class="space-y-3 text-sm text-white/70 mb-8 flex-1">
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Everything in Starter</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Review &amp; reputation automation</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Appointment reminders</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>CRM integration</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Monthly performance reporting</li>
+        </ul>
+        <a href="#contact" class="btn-primary text-center font-semibold text-sm py-3 rounded-full">Book a discovery call</a>
+      </div>
+
+      <div data-reveal class="glass rounded-2xl p-8 flex flex-col">
+        <h3 class="font-display font-semibold text-xl mb-1">Scale</h3>
+        <p class="text-white/50 text-sm mb-6">For e‑commerce brands &amp; multi‑location teams</p>
+        <div class="mb-6">
+          <span class="font-display text-4xl font-semibold">Custom</span>
+          <p class="text-white/40 text-sm mt-1">Scoped on your discovery call</p>
+        </div>
+        <ul class="space-y-3 text-sm text-white/70 mb-8 flex-1">
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Everything in Growth</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>E‑commerce recovery flows</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Multi‑location &amp; multi‑channel routing</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Custom integrations</li>
+          <li class="flex gap-2.5"><svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Dedicated support</li>
+        </ul>
+        <a href="#contact" class="btn-ghost text-center font-semibold text-sm py-3 rounded-full border border-white/15">Book a discovery call</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="mb-14 md:mb-16">
+      <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">QUESTIONS</p>
+      <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1]">Good to know before we talk.</h2>
+    </div>
+
+    <div id="faqList" class="divide-y divide-white/8 border-y border-white/8">
+
+      <div class="accordion-item py-2" data-reveal>
+        <button class="faq-trigger w-full flex items-center justify-between text-left py-5 gap-4">
+          <span class="font-display font-medium text-[17px]">How fast can this be set up?</span>
+          <svg class="accordion-icon w-5 h-5 text-white/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <p class="text-muted text-[15px] leading-relaxed pb-6 pr-8">Most Starter and Growth systems go live in 5–10 business days from our discovery call. Larger, multi‑system builds for e‑commerce or multi‑location teams typically take 2–4 weeks, depending on how many tools we're connecting.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item py-2" data-reveal>
+        <button class="faq-trigger w-full flex items-center justify-between text-left py-5 gap-4">
+          <span class="font-display font-medium text-[17px]">Do I need to be technical to use this?</span>
+          <svg class="accordion-icon w-5 h-5 text-white/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <p class="text-muted text-[15px] leading-relaxed pb-6 pr-8">No. We build, test, and maintain every system for you. You'll get notifications and reports in tools you already use — text, email, or a simple dashboard — with nothing new to learn on your end.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item py-2" data-reveal>
+        <button class="faq-trigger w-full flex items-center justify-between text-left py-5 gap-4">
+          <span class="font-display font-medium text-[17px]">What tools do you build with?</span>
+          <svg class="accordion-icon w-5 h-5 text-white/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <p class="text-muted text-[15px] leading-relaxed pb-6 pr-8">We typically connect Google Sheets, Gmail, and SMS with automation platforms like Make or Zapier, plus your existing CRM, booking calendar, or e‑commerce platform. We choose the stack based on what you already run, not the other way around.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item py-2" data-reveal>
+        <button class="faq-trigger w-full flex items-center justify-between text-left py-5 gap-4">
+          <span class="font-display font-medium text-[17px]">Will this work with my existing website or CRM?</span>
+          <svg class="accordion-icon w-5 h-5 text-white/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <p class="text-muted text-[15px] leading-relaxed pb-6 pr-8">In almost every case, yes. We connect to your existing forms, booking pages, and CRM rather than asking you to replace them. If something can't connect directly, we'll tell you plainly on the discovery call, before any work begins.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item py-2" data-reveal>
+        <button class="faq-trigger w-full flex items-center justify-between text-left py-5 gap-4">
+          <span class="font-display font-medium text-[17px]">What if I need something custom?</span>
+          <svg class="accordion-icon w-5 h-5 text-white/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <p class="text-muted text-[15px] leading-relaxed pb-6 pr-8">That's most of what we do. The packages above cover common starting points — the discovery call is where we scope anything specific to your workflow, from multi‑location routing to custom reporting.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item py-2" data-reveal>
+        <button class="faq-trigger w-full flex items-center justify-between text-left py-5 gap-4">
+          <span class="font-display font-medium text-[17px]">Is there a contract, and can I cancel?</span>
+          <svg class="accordion-icon w-5 h-5 text-white/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <p class="text-muted text-[15px] leading-relaxed pb-6 pr-8">Setup is a one‑time project fee. Monthly maintenance covers hosting, monitoring, and small adjustments, and can be cancelled any time with 30 days' notice — no long‑term contract required.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="py-24 md:py-32 px-5 sm:px-8 relative overflow-hidden">
+  <div class="pointer-events-none absolute -bottom-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-accent2/15 blur-[120px] -z-10"></div>
+
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-5 gap-12 lg:gap-8">
+
+    <div class="lg:col-span-2">
+      <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">GET STARTED</p>
+      <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl tracking-tight leading-[1.1] mb-5">Let's find the leads you're losing.</h2>
+      <p data-reveal class="text-muted text-lg leading-relaxed mb-8">Book a free, no‑pressure discovery call. We'll look at how leads move through your business today and show you exactly where automation would save you the most time and money.</p>
+
+      <div data-reveal class="space-y-5">
+        <div class="flex items-center gap-3 text-sm text-white/70">
+          <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          hello@ddautomations.com
+        </div>
+        <div class="flex items-center gap-3 text-sm text-white/70">
+          <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Replies within one business day
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-3">
+      <form id="contactForm" data-reveal="scale" class="glass grad-border rounded-2xl p-6 sm:p-8">
+        <div id="formSuccess" class="hidden text-center py-10">
+          <div class="w-14 h-14 rounded-full bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-xl mb-2">Request received</h3>
+          <p class="text-muted text-sm max-w-sm mx-auto">Thanks — we'll be in touch within one business day to schedule your discovery call.</p>
+        </div>
+
+        <div id="formFields">
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs font-mono text-white/50 mb-1.5 block">NAME</label>
+              <input required id="contactName" type="text" placeholder="Jordan Lee" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+            </div>
+            <div>
+              <label class="text-xs font-mono text-white/50 mb-1.5 block">BUSINESS NAME</label>
+              <input required id="contactBusiness" type="text" placeholder="Lee's Home Services" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs font-mono text-white/50 mb-1.5 block">EMAIL</label>
+              <input required id="contactEmail" type="email" placeholder="jordan@business.com" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+            </div>
+            <div>
+              <label class="text-xs font-mono text-white/50 mb-1.5 block">PHONE</label>
+              <input id="contactPhone" type="tel" placeholder="(555) 123‑4567" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25">
+            </div>
+          </div>
+          <div class="mb-6">
+            <label class="text-xs font-mono text-white/50 mb-1.5 block">WHAT'S SLOWING DOWN YOUR LEAD FOLLOW‑UP?</label>
+            <textarea rows="4" id="contactMessage" placeholder="e.g. We reply to form leads by hand and it can take a full day" class="field w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-sm placeholder:text-white/25 resize-none"></textarea>
+          </div>
+          <button type="submit" id="contactSubmit" class="btn-primary w-full font-semibold text-sm py-3.5 rounded-full flex items-center justify-center gap-2">
+            <span id="contactSubmitLabel">Book my discovery call</span>
+          </button>
+          <p class="text-center text-xs text-white/35 mt-4">No spam. No obligation. Just a straight conversation about your leads.</p>
+        </div>
+
+        <div id="formError" class="hidden text-center py-10">
+          <div class="w-14 h-14 rounded-full bg-rose-400/10 border border-rose-400/30 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008M10.29 3.86l-8.18 14.18A2 2 0 003.82 21h16.36a2 2 0 001.71-2.96L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-xl mb-2">Something went wrong</h3>
+          <p class="text-muted text-sm max-w-sm mx-auto mb-6">We couldn't send your request. Please try again, or email us directly at hello@ddautomations.com.</p>
+          <button id="formErrorRetry" type="button" class="btn-ghost font-semibold text-sm px-6 py-2.5 rounded-full border border-white/15">Try again</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="border-t border-white/8 py-12 px-5 sm:px-8">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="w-7 h-7 rounded-lg grad-line flex items-center justify-center font-display text-[11px] font-bold text-white">DD</span>
+      <span class="font-display font-semibold text-sm">DDAutomations</span>
+    </a>
+    <nav class="flex flex-wrap items-center justify-center gap-6 text-sm text-white/50">
+      <a href="#services" class="hover:text-white transition-colors">Services</a>
+      <a href="#demo" class="hover:text-white transition-colors">Live demo</a>
+      <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+      <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+      <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+    </nav>
+    <p class="text-xs text-white/35 font-mono" id="footerYear">© 2026 DDAutomations</p>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('siteNav');
+  const onScroll = () => {
+    if (window.scrollY > 12) {
+      nav.classList.add('nav-glass', 'border-white/8');
+    } else {
+      nav.classList.remove('nav-glass', 'border-white/8');
+    }
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuIcon = document.getElementById('menuIcon');
+  menuBtn.addEventListener('click', () => {
+    const isHidden = mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', String(isHidden));
+    menuIcon.innerHTML = isHidden
+      ? '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>'
+      : '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>';
+  });
+  document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.add('hidden');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>';
+  }));
+
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('in'), (i % 6) * 70);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => io.observe(el));
+
+  document.querySelectorAll('.accordion-item').forEach(item => {
+    const trigger = item.querySelector('.faq-trigger');
+    const panel = item.querySelector('.accordion-panel');
+    trigger.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.accordion-item.open').forEach(openItem => {
+        if (openItem !== item) {
+          openItem.classList.remove('open');
+          openItem.querySelector('.accordion-panel').style.maxHeight = null;
+        }
+      });
+      if (isOpen) {
+        item.classList.remove('open');
+        panel.style.maxHeight = null;
+      } else {
+        item.classList.add('open');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  });
+
+  const demoForm = document.getElementById('demoForm');
+  const demoSubmit = document.getElementById('demoSubmit');
+  const demoSubmitLabel = document.getElementById('demoSubmitLabel');
+  const pipelineStatus = document.getElementById('pipelineStatus');
+
+  const nodes = [1, 2, 3, 4].map(n => document.getElementById('node' + n));
+  const connectorsDesktop = ['conn12', 'conn23', 'conn34'].map(id => document.getElementById(id));
+  const connectorsMobile = ['conn12m', 'conn23m', 'conn34m'].map(id => document.getElementById(id));
+  const sheetPanel = document.getElementById('sheetPanel');
+  const notifyPanel = document.getElementById('notifyPanel');
+  const emailPanel = document.getElementById('emailPanel');
+
+  function resetPipeline() {
+    nodes.forEach(n => n.classList.remove('node-active', 'node-done'));
+    [...connectorsDesktop, ...connectorsMobile].forEach(c => c.classList.remove('filled'));
+    [sheetPanel, notifyPanel, emailPanel].forEach(p => p.classList.add('opacity-40'));
+  }
+
+  let demoRunning = false;
+
+  demoForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (demoRunning) return;
+    demoRunning = true;
+
+    const name = document.getElementById('demoName').value.trim() || 'Your customer';
+    const service = document.getElementById('demoService').value.trim() || 'their request';
+
+    document.getElementById('sheetName').textContent = name;
+    document.getElementById('sheetService').textContent = service;
+    document.getElementById('notifyName').textContent = name;
+    document.getElementById('notifyService').textContent = service;
+    document.getElementById('emailName').textContent = name.split(' ')[0];
+    document.getElementById('emailService').textContent = service;
+
+    resetPipeline();
+    demoSubmit.disabled = true;
+    demoSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+    demoSubmitLabel.textContent = 'Running the workflow…';
+    pipelineStatus.textContent = 'PROCESSING…';
+    pipelineStatus.classList.add('text-accent');
+
+    const step = (i, delay, panel) => {
+      setTimeout(() => {
+        nodes[i].classList.add('node-active');
+        if (i > 0) {
+          nodes[i - 1].classList.remove('node-active');
+          nodes[i - 1].classList.add('node-done');
+          connectorsDesktop[i - 1].classList.add('filled');
+          connectorsMobile[i - 1].classList.add('filled');
+        }
+        if (panel) panel.classList.remove('opacity-40');
+      }, delay);
+    };
+
+    step(0, 150, null);
+    step(1, 900, sheetPanel);
+    step(2, 1700, notifyPanel);
+    step(3, 2500, emailPanel);
+
+    setTimeout(() => {
+      nodes[3].classList.remove('node-active');
+      nodes[3].classList.add('node-done');
+      pipelineStatus.textContent = 'DELIVERED ✓';
+      pipelineStatus.classList.remove('text-accent');
+      pipelineStatus.classList.add('text-emerald-400');
+      demoSubmit.disabled = false;
+      demoSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
+      demoSubmitLabel.textContent = 'Run it again';
+      demoRunning = false;
+    }, 3300);
+  });
+
+  const N8N_WEBHOOK_URL = 'https://ddautomation06.app.n8n.cloud/webhook/website-lead';
+
+  const contactForm = document.getElementById('contactForm');
+  const contactSubmit = document.getElementById('contactSubmit');
+  const contactSubmitLabel = document.getElementById('contactSubmitLabel');
+  const formFields = document.getElementById('formFields');
+  const formSuccess = document.getElementById('formSuccess');
+  const formError = document.getElementById('formError');
+
+  async function submitLead(e) {
+    e.preventDefault();
+
+    const payload = {
+      name: document.getElementById('contactName').value.trim(),
+      email: document.getElementById('contactEmail').value.trim(),
+      phone: document.getElementById('contactPhone').value.trim(),
+      service: document.getElementById('contactBusiness').value.trim(),
+      message: document.getElementById('contactMessage').value.trim(),
+      submittedAt: new Date().toISOString()
+    };
+
+    contactSubmit.disabled = true;
+    contactSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+    contactSubmitLabel.textContent = 'Sending…';
+    formError.classList.add('hidden');
+
+    try {
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) throw new Error('Request failed with status ' + response.status);
+
+      formFields.classList.add('hidden');
+      formError.classList.add('hidden');
+      formSuccess.classList.remove('hidden');
+      contactForm.reset();
+    } catch (err) {
+      formFields.classList.add('hidden');
+      formSuccess.classList.add('hidden');
+      formError.classList.remove('hidden');
+    } finally {
+      contactSubmit.disabled = false;
+      contactSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
+      contactSubmitLabel.textContent = 'Book my discovery call';
+    }
+  }
+
+  contactForm.addEventListener('submit', submitLead);
+
+  document.getElementById('formErrorRetry').addEventListener('click', () => {
+    formError.classList.add('hidden');
+    formFields.classList.remove('hidden');
+  });
+
+  document.getElementById('footerYear').textContent = '© ' + new Date().getFullYear() + ' DDAutomations';
+</script>
+
+</body>
+</html>
