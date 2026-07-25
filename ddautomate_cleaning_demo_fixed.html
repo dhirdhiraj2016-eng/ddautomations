@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDAutomate Cleaning Company Demo</title>
+<meta name="description" content="Interactive lead automation demo for a commercial cleaning company.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      bg:'#07080C', surface:'#0E1016', surface2:'#141722',
+      muted:'#9096A6', accent:'#5B8DEF', accent2:'#9B6BFF'
+    }
+  }}
+}
+</script>
+<style>
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91,141,239,.18), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(155,107,255,.10), transparent),
+    #07080C;
+}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(16px)}
+.btn{background:linear-gradient(90deg,#5B8DEF,#9B6BFF);box-shadow:0 14px 35px -14px rgba(91,141,239,.75)}
+.step{transition:.35s ease}
+.step.active{border-color:rgba(91,141,239,.7);box-shadow:0 0 0 1px rgba(91,141,239,.35),0 0 35px -8px rgba(91,141,239,.65)}
+.step.done{border-color:rgba(74,222,128,.55)}
+.fade{opacity:.35;transition:.35s ease}
+.fade.show{opacity:1}
+</style>
+</head>
+<body class="text-white min-h-screen">
+<header class="border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-5 py-5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-r from-accent to-accent2 flex items-center justify-center font-bold">DD</div>
+      <div>
+        <div class="font-semibold">DDAutomate</div>
+        <div class="text-xs text-white/45">Cleaning Company Lead Automation Demo</div>
+      </div>
+    </div>
+    <a href="https://calendar.app.google/6pgikYGauY4kzsQH7" target="_blank" rel="noopener noreferrer"
+       class="btn px-5 py-2.5 rounded-full text-sm font-semibold">Book a Free Call</a>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-5 py-14">
+  <section class="text-center max-w-3xl mx-auto mb-12">
+    <div class="inline-flex px-4 py-1.5 rounded-full glass text-xs text-white/65 mb-5">LIVE CLEANING COMPANY DEMO</div>
+    <h1 class="text-4xl md:text-6xl font-semibold leading-tight">See how a cleaning company captures every lead automatically.</h1>
+    <p class="mt-5 text-lg text-muted">A property manager requests a quote. The lead is logged, the owner is notified, and the customer gets a confirmation — all in seconds.</p>
+  </section>
+
+  <section class="grid lg:grid-cols-5 gap-6 items-start">
+    <div class="lg:col-span-2 glass rounded-2xl p-6">
+      <h2 class="text-xl font-semibold mb-1">Quote Request</h2>
+      <p class="text-sm text-muted mb-6">Pretend you are a property manager requesting weekly office cleaning.</p>
+
+      <form id="leadForm" class="space-y-4">
+        <div>
+          <label class="text-xs text-white/50 block mb-1.5">FULL NAME</label>
+          <input id="name" value="Sarah Thompson" class="w-full bg-white/[.03] border border-white/10 rounded-lg px-4 py-3 text-sm">
+        </div>
+        <div>
+          <label class="text-xs text-white/50 block mb-1.5">BUSINESS</label>
+          <input id="business" value="Northfield Property Management" class="w-full bg-white/[.03] border border-white/10 rounded-lg px-4 py-3 text-sm">
+        </div>
+        <div>
+          <label class="text-xs text-white/50 block mb-1.5">EMAIL</label>
+          <input id="email" value="sarah@northfielddemo.ca" class="w-full bg-white/[.03] border border-white/10 rounded-lg px-4 py-3 text-sm">
+        </div>
+        <div>
+          <label class="text-xs text-white/50 block mb-1.5">REQUEST</label>
+          <textarea id="request" rows="4" class="w-full bg-white/[.03] border border-white/10 rounded-lg px-4 py-3 text-sm">Weekly office cleaning for a 5,000 sq ft building in Belleville.</textarea>
+        </div>
+        <button class="btn w-full py-3.5 rounded-lg font-semibold" type="submit">Submit Quote Request</button>
+      </form>
+    </div>
+
+    <div class="lg:col-span-3 glass rounded-2xl p-6 md:p-8">
+      <div class="flex items-center justify-between mb-7">
+        <h2 class="text-xl font-semibold">Automation Pipeline</h2>
+        <span id="status" class="text-xs text-white/40">WAITING</span>
+      </div>
+
+      <div class="grid md:grid-cols-4 gap-3 mb-7">
+        <div id="s1" class="step border border-white/10 rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">📝</div><div class="text-sm font-semibold">Form Submitted</div>
+        </div>
+        <div id="s2" class="step border border-white/10 rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">📊</div><div class="text-sm font-semibold">Lead Logged</div>
+        </div>
+        <div id="s3" class="step border border-white/10 rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">🔔</div><div class="text-sm font-semibold">Owner Notified</div>
+        </div>
+        <div id="s4" class="step border border-white/10 rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">✉️</div><div class="text-sm font-semibold">Customer Confirmed</div>
+        </div>
+      </div>
+
+      <div id="sheet" class="fade rounded-xl border border-white/10 bg-black/25 p-4 mb-4">
+        <div class="text-xs text-white/40 mb-2">GOOGLE SHEET — cleaning_leads</div>
+        <div class="grid grid-cols-4 gap-3 text-xs text-white/45 border-b border-white/10 pb-2">
+          <span>Name</span><span>Business</span><span>Request</span><span>Status</span>
+        </div>
+        <div class="grid grid-cols-4 gap-3 text-sm pt-3">
+          <span id="sheetName">—</span><span id="sheetBusiness">—</span><span id="sheetRequest">—</span><span class="text-emerald-400">New Lead</span>
+        </div>
+      </div>
+
+      <div id="owner" class="fade rounded-xl border border-white/10 bg-black/25 p-4 mb-4">
+        <div class="text-xs text-white/40 mb-2">OWNER NOTIFICATION</div>
+        <div class="text-sm">🚀 New cleaning lead from <strong id="ownerName">—</strong> at <strong id="ownerBusiness">—</strong>.</div>
+      </div>
+
+      <div id="customer" class="fade rounded-xl border border-white/10 bg-black/25 p-4">
+        <div class="text-xs text-white/40 mb-2">CUSTOMER CONFIRMATION</div>
+        <div class="text-sm leading-relaxed">Hi <strong id="customerName">—</strong>, thanks for contacting the cleaning company. Your quote request has been received and someone will follow up within one business day.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="text-center mt-10">
+    <p class="text-2xl font-semibold">No manual work. No missed leads.</p>
+    <p class="text-muted mt-2">Built by DDAutomate for cleaning and service businesses.</p>
+  </section>
+</main>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+document.getElementById('leadForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = document.getElementById('name').value;
+  const business = document.getElementById('business').value;
+  const request = document.getElementById('request').value;
+
+  document.getElementById('status').textContent = 'RUNNING';
+  for (const id of ['s1','s2','s3','s4']) {
+    document.getElementById(id).classList.remove('active','done');
+  }
+  for (const id of ['sheet','owner','customer']) {
+    document.getElementById(id).classList.remove('show');
+  }
+
+  document.getElementById('s1').classList.add('active');
+  await sleep(650);
+  document.getElementById('s1').classList.remove('active');
+  document.getElementById('s1').classList.add('done');
+
+  document.getElementById('s2').classList.add('active');
+  document.getElementById('sheetName').textContent = name;
+  document.getElementById('sheetBusiness').textContent = business;
+  document.getElementById('sheetRequest').textContent = request;
+  document.getElementById('sheet').classList.add('show');
+  await sleep(800);
+  document.getElementById('s2').classList.remove('active');
+  document.getElementById('s2').classList.add('done');
+
+  document.getElementById('s3').classList.add('active');
+  document.getElementById('ownerName').textContent = name;
+  document.getElementById('ownerBusiness').textContent = business;
+  document.getElementById('owner').classList.add('show');
+  await sleep(800);
+  document.getElementById('s3').classList.remove('active');
+  document.getElementById('s3').classList.add('done');
+
+  document.getElementById('s4').classList.add('active');
+  document.getElementById('customerName').textContent = name.split(' ')[0];
+  document.getElementById('customer').classList.add('show');
+  await sleep(800);
+  document.getElementById('s4').classList.remove('active');
+  document.getElementById('s4').classList.add('done');
+
+  document.getElementById('status').textContent = 'COMPLETE';
+});
+</script>
+</body>
+</html>
