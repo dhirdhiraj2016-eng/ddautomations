@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDAutomate — Automation Proposal</title>
+<meta name="description" content="Automation proposal from DDAutomate.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B0C10'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='700' font-size='52' fill='%235B8DEF' text-anchor='middle'%3EDD%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#07080C',
+          surface: '#0E1016',
+          surface2: '#141722',
+          border: 'rgba(255,255,255,0.08)',
+          muted: '#9096A6',
+          accent: '#5B8DEF',
+          accent2: '#9B6BFF',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        boxShadow: {
+          glow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px -20px rgba(91,141,239,0.35)',
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{ color-scheme: dark; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91,141,239,0.16), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 10%, rgba(155,107,255,0.10), transparent),
+      #07080C;
+  }
+  ::selection{ background: rgba(91,141,239,0.35); color:#fff; }
+
+  ::-webkit-scrollbar{ width: 10px; }
+  ::-webkit-scrollbar-track{ background: #07080C; }
+  ::-webkit-scrollbar-thumb{ background: #23273a; border-radius: 8px; border: 2px solid #07080C; }
+
+  .grad-text{
+    background: linear-gradient(90deg, #EAF0FF 0%, #B9CBFF 45%, #9B6BFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .grad-line{ background: linear-gradient(90deg, #5B8DEF, #9B6BFF); }
+  .grad-border{ position: relative; }
+  .grad-border::before{
+    content:"";
+    position:absolute; inset:0; border-radius:inherit; padding:1px;
+    background: linear-gradient(135deg, rgba(91,141,239,0.55), rgba(155,107,255,0.15), rgba(255,255,255,0.03));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+  }
+  .glass{
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .btn-primary{
+    background: linear-gradient(90deg,#5B8DEF,#9B6BFF);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 12px 30px -10px rgba(91,141,239,0.55);
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 18px 40px -12px rgba(91,141,239,0.7); }
+  .btn-primary:active{ transform: translateY(0px) scale(.98); }
+
+  .card-hover{ transition: transform .4s cubic-bezier(.2,.8,.2,1), border-color .4s ease, box-shadow .4s ease; }
+  .card-hover:hover{ transform: translateY(-6px); border-color: rgba(91,141,239,0.4); box-shadow: 0 30px 60px -30px rgba(91,141,239,0.35); }
+
+  [data-reveal]{ opacity:0; transform: translateY(24px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+  [data-reveal].in{ opacity:1; transform: translateY(0); }
+
+  @keyframes floaty{ 0%,100%{ transform: translateY(0px);} 50%{ transform: translateY(-10px);} }
+  .floaty{ animation: floaty 6s ease-in-out infinite; }
+
+  .num-eyebrow{ letter-spacing: 0.12em; }
+
+  /* Editable fields — click to fill in per client */
+  [contenteditable="true"]{
+    transition: border-color .2s ease, background .2s ease;
+    border-bottom: 1px dashed rgba(255,255,255,0.25);
+  }
+  [contenteditable="true"]:hover{ border-color: rgba(91,141,239,0.5); background: rgba(91,141,239,0.05); }
+  [contenteditable="true"]:focus{ outline: none; border-color: rgba(91,141,239,0.7); background: rgba(91,141,239,0.08); }
+  [contenteditable="true"]:empty:before{ content: attr(data-placeholder); color: rgba(255,255,255,0.32); }
+
+  .editable-block{
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .editable-block:hover{ border-color: rgba(91,141,239,0.45); }
+  .editable-block:focus{ outline: none; border-color: rgba(91,141,239,0.6); background: rgba(91,141,239,0.05); }
+  .editable-block:empty:before{ content: attr(data-placeholder); color: rgba(255,255,255,0.32); }
+
+  .section-divider{ height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); }
+
+  @media print{
+    body{ background:#07080C !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print{ display:none !important; }
+    section{ page-break-inside: avoid; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+
+<body class="bg-bg text-white font-body antialiased selection:bg-accent/30">
+
+<!-- print helper bar -->
+<div class="no-print fixed top-4 right-4 z-50">
+  <button onclick="window.print()" class="glass rounded-full px-4 py-2 text-xs font-mono text-white/70 hover:text-white hover:border-accent/40 transition-colors flex items-center gap-2">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4h12v5M6 18h12v4H6v-4zM6 14h12v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2z"/></svg>
+    Save / Print PDF
+  </button>
+</div>
+
+<main>
+
+<!-- ================= COVER ================= -->
+<section class="relative min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-20 overflow-hidden">
+  <div class="pointer-events-none absolute inset-0 -z-10" style="background-image:linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); background-size:64px 64px; mask-image: radial-gradient(ellipse 60% 55% at 50% 35%, black, transparent);"></div>
+  <div class="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full bg-accent/20 blur-[130px] -z-10"></div>
+  <div class="pointer-events-none absolute bottom-0 right-0 w-[600px] h-[500px] rounded-full bg-accent2/15 blur-[120px] -z-10"></div>
+
+  <div data-reveal class="flex items-center gap-3 mb-10">
+    <span class="w-12 h-12 rounded-2xl grad-line flex items-center justify-center font-display font-bold text-lg text-white shadow-glow">DD</span>
+    <span class="font-display font-semibold text-2xl tracking-tight">DDAutomate</span>
+  </div>
+
+  <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-5">AUTOMATION PROPOSAL</p>
+
+  <h1 data-reveal class="font-display font-semibold text-center text-[2.6rem] leading-[1.08] sm:text-6xl md:text-7xl tracking-tight max-w-4xl">
+    Automation <span class="grad-text">Proposal</span>
+  </h1>
+
+  <div data-reveal="" class="mt-16 w-full max-w-md glass grad-border rounded-2xl p-8">
+    <div class="mb-6">
+      <p class="text-xs font-mono text-white/40 num-eyebrow mb-2">PREPARED FOR</p>
+      <p class="font-display text-xl font-medium" contenteditable="true" data-placeholder="Client / Business Name">&nbsp;</p>
+    </div>
+    <div>
+      <p class="text-xs font-mono text-white/40 num-eyebrow mb-2">DATE</p>
+      <p class="font-display text-xl font-medium" contenteditable="true" data-placeholder="Month DD, YYYY">&nbsp;</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= ABOUT DDAUTOMATE ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-3xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">01 — ABOUT DDAUTOMATE</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl tracking-tight leading-[1.1] mb-6">Who we are</h2>
+    <p data-reveal class="text-muted text-lg leading-relaxed">
+      DDAutomate builds AI-powered automation systems for service businesses. We design the behind‑the‑scenes infrastructure that captures leads the moment they arrive, follows up instantly, and books appointments automatically — so your team spends less time on repetitive admin and more time serving customers and growing the business.
+    </p>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= CLIENT'S CHALLENGES ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-3xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">02 — THE CLIENT'S CHALLENGES</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl tracking-tight leading-[1.1] mb-6">Where things stand today</h2>
+    <div
+      data-reveal="scale"
+      class="editable-block glass grad-border rounded-2xl p-8 min-h-[180px] text-white/70 text-[15px] leading-relaxed"
+      contenteditable="true"
+      data-placeholder="Click here to describe the client's current challenges — missed leads, slow follow-up, manual admin, no-shows, or anything specific to their business..."
+    >&nbsp;</div>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= RECOMMENDED SOLUTION ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8 bg-surface/40 border-y border-white/6">
+  <div class="max-w-5xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">03 — RECOMMENDED SOLUTION</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1] mb-4">LeadFlow <span class="grad-text">Pro</span></h2>
+    <p data-reveal class="text-muted text-lg leading-relaxed max-w-2xl mb-12">A complete lead capture and follow-up system, built and configured around this business.</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Lead Capture</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Instant Notifications</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Customer Confirmation Emails</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Google Sheets / CRM</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Appointment Booking</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">AI Follow-up</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Setup</h3>
+      </div>
+
+      <div data-reveal class="card-hover glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mb-5">
+          <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-[15px]">Training</h3>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= PROJECT TIMELINE ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-5xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">04 — PROJECT TIMELINE</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1] mb-2">Week 1</h2>
+    <p data-reveal class="text-muted text-lg leading-relaxed max-w-2xl mb-12">From kickoff to launch, in a single week.</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <span class="font-display grad-text text-4xl font-semibold opacity-90">01</span>
+        <h3 class="font-display font-semibold text-lg mt-4">Discovery</h3>
+      </div>
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <span class="font-display grad-text text-4xl font-semibold opacity-90">02</span>
+        <h3 class="font-display font-semibold text-lg mt-4">Build</h3>
+      </div>
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <span class="font-display grad-text text-4xl font-semibold opacity-90">03</span>
+        <h3 class="font-display font-semibold text-lg mt-4">Testing</h3>
+      </div>
+      <div data-reveal class="card-hover glass rounded-2xl p-7">
+        <span class="font-display grad-text text-4xl font-semibold opacity-90">04</span>
+        <h3 class="font-display font-semibold text-lg mt-4">Launch</h3>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= INVESTMENT ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8 bg-surface/40 border-y border-white/6">
+  <div class="max-w-4xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">05 — INVESTMENT</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1] mb-12">Investment</h2>
+
+    <div class="grid sm:grid-cols-2 gap-5">
+
+      <div data-reveal class="glass grad-border rounded-2xl p-8">
+        <p class="text-xs font-mono text-white/40 num-eyebrow mb-4">ONE-TIME SETUP</p>
+        <p class="font-display text-4xl font-semibold" contenteditable="true" data-placeholder="$0,000">&nbsp;</p>
+      </div>
+
+      <div data-reveal class="glass grad-border rounded-2xl p-8">
+        <p class="text-xs font-mono text-white/40 num-eyebrow mb-4">MONTHLY SUPPORT</p>
+        <p class="font-display text-4xl font-semibold" contenteditable="true" data-placeholder="$000 / mo">&nbsp;</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= WHY DDAUTOMATE ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8">
+  <div class="max-w-5xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">06 — WHY DDAUTOMATE</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1] mb-12">Why DDAutomate</h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <div data-reveal class="glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base mb-2">Custom-built</h3>
+        <p class="text-sm text-white/60 leading-relaxed">Every system is designed around this business's actual workflow — not a rigid template.</p>
+      </div>
+
+      <div data-reveal class="glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base mb-2">Canadian support</h3>
+        <p class="text-sm text-white/60 leading-relaxed">Based in Belleville, Ontario — real people who understand the local market.</p>
+      </div>
+
+      <div data-reveal class="glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base mb-2">Fast implementation</h3>
+        <p class="text-sm text-white/60 leading-relaxed">Live in days, not months, so the business starts capturing more leads right away.</p>
+      </div>
+
+      <div data-reveal class="glass rounded-2xl p-7">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6m0-8l-5 5m0 0l5 5"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base mb-2">Future-ready</h3>
+        <p class="text-sm text-white/60 leading-relaxed">Built on flexible automation infrastructure that adapts and grows alongside the business.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-6xl mx-auto"></div>
+
+<!-- ================= NEXT STEPS ================= -->
+<section class="py-24 md:py-32 px-5 sm:px-8 bg-surface/40 border-y border-white/6">
+  <div class="max-w-4xl mx-auto">
+    <p data-reveal class="text-xs font-mono text-accent num-eyebrow mb-4">07 — NEXT STEPS</p>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-4xl md:text-5xl tracking-tight leading-[1.1] mb-12">Next steps</h2>
+
+    <div class="space-y-4">
+      <div data-reveal class="glass rounded-2xl p-6 flex items-center gap-5">
+        <span class="font-display grad-text text-3xl font-semibold shrink-0 w-10">1</span>
+        <p class="font-display font-medium text-lg">Approve proposal</p>
+      </div>
+      <div data-reveal class="glass rounded-2xl p-6 flex items-center gap-5">
+        <span class="font-display grad-text text-3xl font-semibold shrink-0 w-10">2</span>
+        <p class="font-display font-medium text-lg">Discovery meeting</p>
+      </div>
+      <div data-reveal class="glass rounded-2xl p-6 flex items-center gap-5">
+        <span class="font-display grad-text text-3xl font-semibold shrink-0 w-10">3</span>
+        <p class="font-display font-medium text-lg">Build</p>
+      </div>
+      <div data-reveal class="glass rounded-2xl p-6 flex items-center gap-5">
+        <span class="font-display grad-text text-3xl font-semibold shrink-0 w-10">4</span>
+        <p class="font-display font-medium text-lg">Launch</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="py-24 md:py-36 px-5 sm:px-8 relative overflow-hidden">
+  <div class="pointer-events-none absolute -bottom-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-accent2/15 blur-[120px] -z-10"></div>
+  <div class="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-accent/15 blur-[110px] -z-10"></div>
+
+  <div class="max-w-2xl mx-auto text-center">
+    <div data-reveal class="flex items-center justify-center gap-3 mb-8">
+      <span class="w-10 h-10 rounded-xl grad-line flex items-center justify-center font-display font-bold text-sm text-white shadow-glow">DD</span>
+      <span class="font-display font-semibold text-lg tracking-tight">DDAutomate</span>
+    </div>
+    <h2 data-reveal class="font-display font-semibold text-3xl sm:text-5xl tracking-tight leading-[1.1] mb-8">Let's get started.</h2>
+    <a data-reveal href="https://calendar.app.google/6pgikYGauY4kzsQH7" class="btn-primary inline-block font-semibold px-9 py-4 rounded-full text-[15px]" target="_blank" rel="noopener noreferrer">Book Discovery Call</a>
+    <p data-reveal class="mt-8 text-xs text-white/35 font-mono">DDAutomate · hello@ddautomate.com · Belleville, Ontario</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('in'), (i % 6) * 70);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
