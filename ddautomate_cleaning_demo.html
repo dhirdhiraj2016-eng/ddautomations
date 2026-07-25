@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DDAutomate Cleaning Company Demo</title>
 <meta name="description" content="Interactive lead automation demo for a commercial cleaning company.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -12,6 +15,11 @@ tailwind.config = {
     colors: {
       bg:'#07080C', surface:'#0E1016', surface2:'#141722',
       muted:'#9096A6', accent:'#5B8DEF', accent2:'#9B6BFF'
+    },
+    fontFamily: {
+      display: ['"Space Grotesk"', 'sans-serif'],
+      body: ['"Inter"', 'sans-serif'],
+      mono: ['"JetBrains Mono"', 'monospace']
     }
   }}
 }
@@ -32,18 +40,22 @@ body{
 .fade.show{opacity:1}
 </style>
 </head>
-<body class="text-white min-h-screen">
-<header class="border-b border-white/10">
-  <div class="max-w-6xl mx-auto px-5 py-5 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-r from-accent to-accent2 flex items-center justify-center font-bold">DD</div>
+<body class="font-body text-white min-h-screen">
+<header class="border-b border-white/10 bg-bg/80 backdrop-blur-xl sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-5 py-5 flex items-center justify-between gap-4">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-r from-accent to-accent2 flex items-center justify-center font-display font-bold text-sm">DD</div>
       <div>
-        <div class="font-semibold">DDAutomate</div>
+        <div class="font-display font-semibold">DDAutomate</div>
         <div class="text-xs text-white/45">Cleaning Company Lead Automation Demo</div>
       </div>
-    </div>
-    <a href="https://calendar.app.google/6pgikYGauY4kzsQH7" target="_blank" rel="noopener noreferrer"
-       class="btn px-5 py-2.5 rounded-full text-sm font-semibold">Book a Free Call</a>
+    </a>
+    <nav class="flex items-center gap-5">
+      <a href="index.html" class="hidden sm:inline text-sm text-white/70 hover:text-white transition-colors">Home</a>
+      <a href="leadflow.html" class="hidden sm:inline text-sm text-white/70 hover:text-white transition-colors">LeadFlow Pro</a>
+      <a href="https://calendar.app.google/6pgikYGauY4kzsQH7" target="_blank" rel="noopener noreferrer"
+         class="btn px-5 py-2.5 rounded-full text-sm font-semibold">Book Discovery Call</a>
+    </nav>
   </div>
 </header>
 
@@ -126,8 +138,16 @@ body{
   <section class="text-center mt-10">
     <p class="text-2xl font-semibold">No manual work. No missed leads.</p>
     <p class="text-muted mt-2">Built by DDAutomate for cleaning and service businesses.</p>
+    <a href="leadflow.html" class="inline-flex items-center gap-2 mt-8 text-sm text-white/70 hover:text-white transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Back to LeadFlow Pro
+    </a>
   </section>
 </main>
+
+<footer class="border-t border-white/10 py-8 px-5 text-center text-sm text-white/45">
+  © 2026 DDAutomate · Belleville, Ontario · hello@ddautomate.com
+</footer>
 
 <script>
 const sleep = ms => new Promise(r => setTimeout(r, ms));
